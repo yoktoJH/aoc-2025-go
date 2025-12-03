@@ -7,8 +7,8 @@ import (
 	"os"
 )
 
-func findMax(line string) (int, int) {
-	maximum, imaximum := int32(0), 0
+func findMax(line []byte) (int, int) {
+	maximum, imaximum := byte(0), 0
 	for i, c := range line {
 		intC := c - 48
 		if intC > maximum {
@@ -19,35 +19,13 @@ func findMax(line string) (int, int) {
 	return int(maximum), imaximum
 }
 
-func part1(line string) int {
-	maximum, imaximum := int32(0), 0
-	for i, c := range line[:len(line)-1] {
-		intC := c - 48
-		if intC > maximum {
-			maximum = intC
-			imaximum = i
-		}
-	}
-	submaximum := int32(0)
-	for _, c := range line[imaximum+1:] {
-		intC := c - 48
-		if intC > submaximum {
-			submaximum = intC
-
-		}
-	}
-	fmt.Println(int(maximum)*10 + int(submaximum))
-	return int(maximum)*10 + int(submaximum)
-}
-
-func part2(line string) int {
+func solve(line []byte, digits int) int {
 	sum := 0
-	for i := 0; i < 12; i++ {
-		m, ind := findMax(line[:len(line)-(11-i)])
-		sum = sum*10 + m
-		line = line[ind+1:]
+	for i := 0; i < digits; i++ {
+		maximum, imaximum := findMax(line[:len(line)-(digits-1-i)])
+		sum = 10*sum + maximum
+		line = line[imaximum+1:]
 	}
-	fmt.Println(sum)
 	return sum
 }
 
@@ -65,9 +43,9 @@ func main() {
 	sum2 := 0
 	// optionally, resize scanner's capacity for lines over 64K, see next example
 	for scanner.Scan() {
-		line := scanner.Text()
-		sum1 += part1(line)
-		sum2 += part2(line)
+		line := scanner.Bytes()
+		sum1 += solve(line, 2)
+		sum2 += solve(line, 12)
 	}
 	fmt.Println("part1")
 	fmt.Println(sum1)
