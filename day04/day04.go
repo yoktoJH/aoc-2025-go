@@ -9,17 +9,16 @@ import (
 
 func countNeighbours(i, j int, rolls [][]byte) int {
 	sum := 0
-	for i_shift := -1; i_shift < 2; i_shift++ {
-		ii := i + i_shift
+	for iShift := -1; iShift < 2; iShift++ {
+		ii := i + iShift
 		if ii < 0 || ii >= len(rolls) {
 			continue
 		}
-		for j_shift := -1; j_shift < 2; j_shift++ {
-			if i_shift == 0 && j_shift == 0 {
+		for jShift := -1; jShift < 2; jShift++ {
+			if iShift == 0 && jShift == 0 {
 				continue
 			}
-
-			jj := j + j_shift
+			jj := j + jShift
 			if jj < 0 || jj >= len(rolls[ii]) {
 				continue
 			}
@@ -43,10 +42,6 @@ func removeOnRepeat(rolls [][]byte, toRemove [][]int) int {
 		toRemove = toRemove[:0]
 		for i := 0; i < len(rolls); i++ {
 			for j := 0; j < len(rolls[i]); j++ {
-				if rolls[i][j] != 64 && rolls[i][j] != 46 {
-					fmt.Println(rolls[i][j])
-					fmt.Println(i, j)
-				}
 
 				if rolls[i][j] == 64 && countNeighbours(i, j, rolls) < 4 {
 					toRemove = append(toRemove, []int{i, j})
@@ -54,15 +49,13 @@ func removeOnRepeat(rolls [][]byte, toRemove [][]int) int {
 			}
 		}
 		changed = len(toRemove) != 0
-
 	}
-
 	return sum
 }
 
 func main() {
-	path := "input"
-	//path := "example"
+	//path := "input"
+	path := "example"
 	file, err := os.Open(path + "/04.txt")
 	if err != nil {
 		log.Fatal(err)
@@ -80,13 +73,7 @@ func main() {
 	toRemove := make([][]int, 0)
 	for i := 0; i < len(rolls); i++ {
 		for j := 0; j < len(rolls[i]); j++ {
-			if rolls[i][j] != 64 && rolls[i][j] != 46 {
-				fmt.Println(rolls[i][j])
-				fmt.Println(i, j)
-			}
-
 			if rolls[i][j] == 64 && countNeighbours(i, j, rolls) < 4 {
-				fmt.Println(i, j)
 				sum++
 				toRemove = append(toRemove, []int{i, j})
 			}
